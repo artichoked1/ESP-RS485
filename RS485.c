@@ -41,15 +41,15 @@ esp_err_t rs485_uart_init(rs485_uart_t *dev) {
 }
 
 void rs485_set_transmit(rs485_uart_t *dev) {
-    gpio_set_level(dev->re_pin, 1);  // RE = 0 (enable receiver but not needed here)
-    gpio_set_level(dev->de_pin, 1);  // DE = 1 (enable driver)
-    vTaskDelay(pdMS_TO_TICKS(1)); // Allow time for driver to enable
+    gpio_set_level(dev->re_pin, 1);
+    gpio_set_level(dev->de_pin, 1);
+    vTaskDelay(pdMS_TO_TICKS(1));
 }
 
 void rs485_set_receive(rs485_uart_t *dev) {
-    gpio_set_level(dev->de_pin, 0);  // DE = 0 (disable driver)
-    gpio_set_level(dev->re_pin, 0);  // RE = 0 (enable receiver)
-    vTaskDelay(pdMS_TO_TICKS(1)); // Allow time for receiver to enable
+    gpio_set_level(dev->de_pin, 0);
+    gpio_set_level(dev->re_pin, 0);
+    vTaskDelay(pdMS_TO_TICKS(1));
 }
 
 esp_err_t rs485_uart_write(rs485_uart_t *dev, const uint8_t *data, size_t len) {
@@ -61,13 +61,18 @@ esp_err_t rs485_uart_write(rs485_uart_t *dev, const uint8_t *data, size_t len) {
 }
 
 void rs485_enter_shutdown(rs485_uart_t *dev) {
-    gpio_set_level(dev->re_pin, 1); // Receiver disable
-    gpio_set_level(dev->de_pin, 0); // Driver disable
-    vTaskDelay(pdMS_TO_TICKS(1)); // Allow time for shutdown
+    gpio_set_level(dev->re_pin, 1);
+    gpio_set_level(dev->de_pin, 0);
+    vTaskDelay(pdMS_TO_TICKS(1));
 }
 
 void rs485_exit_shutdown(rs485_uart_t *dev) {
-    gpio_set_level(dev->re_pin, 0); // Enable receiver
-    gpio_set_level(dev->de_pin, 0); // Keep driver off
-    // Wait tZH(SHDN)/tZL(SHDN) if needed before using
+    gpio_set_level(dev->re_pin, 0);
+    gpio_set_level(dev->de_pin, 0);
+}
+
+int rs485_available(rs485_uart_t *dev) {
+    size_t available;
+    uart_get_buffered_data_len(dev->uart_port, &available);
+    return available > 0 ? 1 : 0; // Return 1 if data is available, else 0
 }
