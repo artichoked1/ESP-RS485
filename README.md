@@ -1,12 +1,12 @@
-### ESP RS485
+# ESP RS485
 This component provides a very simple way to use RS485 communication with an ESP device. It is a wrapper around the built-in uart driver in ESP-IDF. It currently only does not have non-blocking mode support.
 
-### Features
+## Features
 - Simple API for sending and receiving data over RS485.
 - Supports seperate transmit and receive pins.
 - Supports low-power shutdown modes common in most RS485 transceivers.
   
-### Usage
+## Usage
 Recieve data:
 ```c
 #include "RS485.h"
