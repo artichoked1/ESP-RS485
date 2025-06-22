@@ -52,6 +52,14 @@ void rs485_set_receive(rs485_uart_t *dev) {
     vTaskDelay(pdMS_TO_TICKS(1));
 }
 
+esp_err_t rs485_uart_read_buffer(rs485_uart_t *dev, uint8_t *data, size_t len, TickType_t timeout) {
+    rs485_set_receive(dev);
+    int read_bytes = uart_read_bytes(dev->uart_port, data, len, timeout);
+    if (read_bytes < 0) {
+        return ESP_FAIL;
+    }
+    return ESP_OK;
+
 esp_err_t rs485_uart_write(rs485_uart_t *dev, const uint8_t *data, size_t len) {
     rs485_set_transmit(dev);
     uart_write_bytes(dev->uart_port, (const char*)data, len);
