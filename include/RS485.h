@@ -1,5 +1,9 @@
 #include "driver/uart.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
     uart_port_t uart_port;
     int tx_pin;
@@ -15,3 +19,7 @@ esp_err_t rs485_uart_read_buffer(rs485_uart_t *dev, uint8_t *data, size_t max_le
 int rs485_available(rs485_uart_t *dev);
 void rs485_exit_shutdown(rs485_uart_t *dev);
 void rs485_enter_shutdown(rs485_uart_t *dev);
+
+#ifdef __cplusplus
+}
+#endif
